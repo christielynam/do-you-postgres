@@ -5,11 +5,14 @@ const logger = require('morgan');
 const cookieParser = require('cookie-parser');
 const bodyParser = require('body-parser');
 const http = require('http');
+const environment = process.env.NODE_ENV || 'development';
+const configuration = require('./knexfile')[environment];
+const database = require('knex')(configuration);
 
 const index = require('./routes/index');
 const users = require('./routes/users');
 
-const app = express(); //set up the express app
+const app = express();
 
 
 //parse incoming request data
@@ -34,5 +37,16 @@ http.createServer(app).listen(app.get("port"), function() {
   console.log("Express server listening on port " + app.get("port"));
 });
 
+
+
+app.get('/api/v1/users', (request, response) => {
+  database('users').select()
+    .then((users) => {
+      response.status(200).json(users);
+    })
+    .catch((error) => {
+      response.status(500).json({ error });
+    });
+});
 
 module.exports = app;

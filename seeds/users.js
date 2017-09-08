@@ -9,6 +9,11 @@ exports.seed = (knex, Promise) => {
           name: 'Christie',
           email: 'christielynam@gmail.com',
           password: 'auburn'
+        },
+        {
+          name: 'Margo',
+          email: 'margoschaedel@gmail.com',
+          password: 'texas'
         }
       ]);
     });
