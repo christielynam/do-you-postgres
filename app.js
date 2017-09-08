@@ -22,7 +22,7 @@ app.use('/users', users);
 app.set("port", process.env.PORT || 3000);
 
 app.get("/", function(req, res) {
-  res.send("test!");
+  res.send("war eagle!");
 });
 
 app.set("port", process.env.PORT || 3000);
