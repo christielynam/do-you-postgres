@@ -1,4 +1,5 @@
 const express = require('express');
+const cors= require('express-cors');
 const path = require('path');
 const favicon = require('serve-favicon');
 const logger = require('morgan');
@@ -14,7 +15,12 @@ const users = require('./routes/users');
 
 const app = express();
 
-
+app.use(cors());
+app.use(function(req, res, next) {
+  res.header('Access-Control-Allow-Origin', '*');
+  res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
+  next();
+});
 //parse incoming request data
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -39,8 +45,11 @@ http.createServer(app).listen(app.get("port"), function() {
 
 
 
-app.get('/api/v1/users', (request, response) => {
-  database('users').select()
+app.post('/api/v1/users', (request, response) => {
+  database('users').where({
+    email: request.body.email,
+    password: request.body.password
+  }).select()
     .then((users) => {
       response.status(200).json(users);
     })
