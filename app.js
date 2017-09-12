@@ -39,8 +39,11 @@ http.createServer(app).listen(app.get("port"), function() {
 
 
 
-app.get('/api/v1/users', (request, response) => {
-  database('users').select()
+app.post('/api/v1/users', (request, response) => {
+  database('users').where({
+    email: request.body.email,
+    password: request.body.password
+  }).select()
     .then((users) => {
       response.status(200).json(users);
     })
