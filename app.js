@@ -9,6 +9,8 @@ const http = require('http');
 const environment = process.env.NODE_ENV || 'development';
 const configuration = require('./knexfile')[environment];
 const database = require('knex')(configuration);
+const expressJWT = require('express-jwt');
+const jwt = require('jsonwebtoken');
 
 const index = require('./routes/index');
 const users = require('./routes/users');
@@ -24,6 +26,7 @@ app.use(function(req, res, next) {
 //parse incoming request data
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
+app.use(expressJWT({ secret: 'this is my secret' }).unless({path: ['/login', '/api/v1/users']})) //dont know if this is right
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/users', users);
