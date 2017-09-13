@@ -36,16 +36,13 @@ app.get("/", function(req, res) {
 });
 
 app.set("port", process.env.PORT || 3000);
-app.get("/whatup", function(req, res) {
-  res.send("whatup");
-});
 
 http.createServer(app).listen(app.get("port"), function() {
   console.log("Express server listening on port " + app.get("port"));
 });
 
 
-
+// login of user
 app.post('/api/v1/users', (request, response) => {
   database('users').where({
     email: request.body.email,
@@ -59,8 +56,10 @@ app.post('/api/v1/users', (request, response) => {
     });
 });
 
+// create new account
 app.post('/api/v1/users/new', (request, response) => {
   database('users').insert({
+    name: request.body.name,
     email: request.body.email,
     password: request.body.password
   }, '*')
@@ -70,6 +69,34 @@ app.post('/api/v1/users/new', (request, response) => {
   .catch((error) => {
     response.status(500).json({ error });
   })
+})
+
+// storing the test id in results database, use foreign key to connect to correct user
+app.post('/api/v1/results', (request, response) => {
+  database('results').insert({
+    test_id: request.body.test_id,
+    deck_id: request.body.deck_id,
+    user_id: request.body.user_id
+  }, '*')
+  .then((results) => {
+    response.status(200).json(results);
+  })
+  .catch((error) => {
+    response.status(500).json({ error })
+  })
+})
+
+// retrieve test_id for user_id
+app.get('/api/v1/results/:id', (request, response) => {
+  database('results').where({
+    user_id: parseInt(request.params.id)
+  }).select()
+  .then((userResults) => {
+    response.status(200).json(userResults);
+  })
+  .catch((error) => {
+    response.status(500).json({ error });
+  });
 })
 
 module.exports = app;

@@ -6,10 +6,12 @@ exports.seed = (knex, Promise) => {
       // Inserts seed entries
       return knex('users').insert([
         {
+          name: 'Christie Lynam',
           email: 'christielynam@gmail.com',
           password: 'auburn'
         },
         {
+          name: 'Margo Schaedel',
           email: 'margoschaedel@gmail.com',
           password: 'texas'
         }
