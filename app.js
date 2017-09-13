@@ -1,16 +1,15 @@
 const express = require('express');
 const cors= require('express-cors');
 const path = require('path');
-const favicon = require('serve-favicon');
-const logger = require('morgan');
-const cookieParser = require('cookie-parser');
+// const favicon = require('serve-favicon');
+// const logger = require('morgan');
+// const cookieParser = require('cookie-parser');
 const bodyParser = require('body-parser');
 const http = require('http');
 const environment = process.env.NODE_ENV || 'development';
 const configuration = require('./knexfile')[environment];
 const database = require('knex')(configuration);
-const expressJWT = require('express-jwt');
-const jwt = require('jsonwebtoken');
+
 
 const index = require('./routes/index');
 const users = require('./routes/users');
@@ -26,7 +25,6 @@ app.use(function(req, res, next) {
 //parse incoming request data
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
-app.use(expressJWT({ secret: 'this is my secret' }).unless({path: ['/login', '/api/v1/users']})) //dont know if this is right
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/users', users);
@@ -60,5 +58,18 @@ app.post('/api/v1/users', (request, response) => {
       response.status(500).json({ error });
     });
 });
+
+app.post('/api/v1/users/new', (request, response) => {
+  database('users').insert({
+    email: request.body.email,
+    password: request.body.password
+  }, '*')
+  .then((users) => {
+    response.status(200).json(users);
+  })
+  .catch((error) => {
+    response.status(500).json({ error });
+  })
+})
 
 module.exports = app;
