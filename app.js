@@ -1,9 +1,6 @@
 const express = require('express');
 const cors= require('express-cors');
 const path = require('path');
-// const favicon = require('serve-favicon');
-// const logger = require('morgan');
-// const cookieParser = require('cookie-parser');
 const bodyParser = require('body-parser');
 const http = require('http');
 const environment = process.env.NODE_ENV || 'development';
@@ -44,6 +41,7 @@ http.createServer(app).listen(app.get("port"), function() {
 
 // login of user
 app.post('/api/v1/users', (request, response) => {
+  request.body.email = request.body.email.toLowercase()
   database('users').where({
     email: request.body.email,
     password: request.body.password
@@ -58,6 +56,7 @@ app.post('/api/v1/users', (request, response) => {
 
 // create new account
 app.post('/api/v1/users/new', (request, response) => {
+  request.body.email = request.body.email.toLowercase()
   database('users').insert({
     name: request.body.name,
     email: request.body.email,
