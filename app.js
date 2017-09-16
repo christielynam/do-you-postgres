@@ -41,7 +41,7 @@ http.createServer(app).listen(app.get("port"), function() {
 
 // login of user
 app.post('/api/v1/users', (request, response) => {
-  request.body.email = request.body.email.toLowercase()
+  request.body.email = request.body.email.toLowerCase()
   database('users').where({
     email: request.body.email,
     password: request.body.password
@@ -56,7 +56,7 @@ app.post('/api/v1/users', (request, response) => {
 
 // create new account
 app.post('/api/v1/users/new', (request, response) => {
-  request.body.email = request.body.email.toLowercase()
+  request.body.email = request.body.email.toLowerCase()
   database('users').insert({
     name: request.body.name,
     email: request.body.email,
