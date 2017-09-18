@@ -11,7 +11,7 @@ exports.up = function(knex, Promise) {
 
     knex.schema.createTable('results', function(table) {
       table.increments('id').primary();
-      table.string('test_id');
+      table.string('test_id').unique();
       table.string('deck_id');
       table.integer('user_id').unsigned();
       table.foreign('user_id').references('users.id');
