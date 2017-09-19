@@ -36,6 +36,7 @@ http.createServer(app).listen(app.get("port"), function() {
 
 // ENDPOINTS
 // login user to database, retrieve user
+
 app.post('/api/v1/users', (request, response) => {
   request.body.email = request.body.email.toLowerCase()
   const { email, password } = request.body
