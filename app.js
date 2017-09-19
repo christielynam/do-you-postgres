@@ -38,13 +38,6 @@ http.createServer(app).listen(app.get("port"), function() {
   console.log("Express server listening on port " + app.get("port"));
 });
 
-// app.locals.users = require('./users');
-
-app.post('/api/v1/users', (request, response) => {
-  app.locals.users.push(request.body); // No validation here...
-  response.status(200).json(app.locals.users[app.locals.users.length - 1]);
-});
-
 
 // login of user
 app.post('/api/v1/users', (request, response) => {
