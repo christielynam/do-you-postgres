@@ -3,6 +3,10 @@ const should = chai.should();
 const chaiHttp = require('chai-http');
 const server = require('../app');
 
+const environment = process.env.NODE_ENV || 'development';
+const configuration = require('../knexfile')[environment];
+const database = require('knex')(configuration);
+
 chai.use(chaiHttp);
 
 describe('POST /api/v1/users', () => {
@@ -27,9 +31,8 @@ describe('POST /api/v1/users', () => {
       response.body[0].should.have.property('password');
       response.body[0].password.should.equal('auburn');
       response.body[0].should.have.property('created_at');
-      response.body[0].created_at.should.equal('2017-09-16T19:59:58.687Z');
       response.body[0].should.have.property('updated_at');
-      response.body[0].updated_at.should.equal('2017-09-16T19:59:58.687Z');
+      done();
     })
   })
 
@@ -43,6 +46,7 @@ describe('POST /api/v1/users', () => {
       .end((err, response) => {
         response.should.have.status(500)
         response.body.error.should.equal('')
+        done();
       })
     })
 
@@ -63,7 +67,6 @@ describe('POST /api/v1/users', () => {
         response.body.should.be.a('array');
         response.body.length.should.equal(1);
         response.body[0].should.have.property('id');
-        // response.body[0].id.should.equal(1);
         response.body[0].should.have.property('name');
         response.body[0].name.should.equal('Laura');
         response.body[0].should.have.property('email');
@@ -71,10 +74,8 @@ describe('POST /api/v1/users', () => {
         response.body[0].should.have.property('password');
         response.body[0].password.should.equal('cool');
         response.body[0].should.have.property('created_at');
-        // response.body[0].created_at.should.equal('2017-09-16T19:59:58.687Z');
         response.body[0].should.have.property('updated_at');
-        // response.body[0].updated_at.should.equal('2017-09-16T19:59:58.687Z');
-
+        done();
       })
     })
 
@@ -82,13 +83,14 @@ describe('POST /api/v1/users', () => {
       chai.request(server)
       .post('/api/v1/users/new')
       .send({
-        name: ''
+        name: '',
         email: 'christielynam@gmail.com',
         password: ''
       })
       .end((err, response) => {
         response.should.have.status(500)
         response.body.error.should.equal('')
+        done();
       })
     })
 
@@ -109,7 +111,6 @@ describe('POST /api/v1/results', () => {
       response.body.should.be.a('array');
       response.body.length.should.equal(1);
       response.body[0].should.have.property('id');
-      // response.body[0].id.should.equal(1);
       response.body[0].should.have.property('test_id');
       response.body[0].test_id.should.equal('7c3f284b-a4f3-408c-83b6-e6ba5f8f9d88');
       response.body[0].should.have.property('deck-id');
@@ -117,10 +118,8 @@ describe('POST /api/v1/results', () => {
       response.body[0].should.have.property('user_id');
       response.body[0].user_id.should.equal('3');
       response.body[0].should.have.property('created_at');
-      // response.body[0].created_at.should.equal('2017-09-16T19:59:58.687Z');
       response.body[0].should.have.property('updated_at');
-      // response.body[0].updated_at.should.equal('2017-09-16T19:59:58.687Z');
-
+      done();
     })
   })
 
@@ -128,13 +127,14 @@ describe('POST /api/v1/results', () => {
     chai.request(server)
     .post('/api/v1/results')
     .send({
-      test_id: ''
+      test_id: '',
       deck_id: 'core',
       user_id: '4'
     })
     .end((err, response) => {
       response.should.have.status(500)
       response.body.error.should.equal('')
+      done();
     })
   })
 
@@ -161,6 +161,7 @@ describe('GET /api/v1/results/:id', () => {
       response.body[0].created_at.should.equal('2017-09-18T16:08:34.142Z');
       response.body[0].should.have.property('updated_at');
       response.body[0].updated_at.should.equal('2017-09-18T16:08:34.142Z');
+      done();
     })
   })
 
@@ -169,7 +170,7 @@ describe('GET /api/v1/results/:id', () => {
     .get('/api/v1/results/')
     .end((err, response) => {
       response.should.have.status(500)
-      done()
+      done();
     })
   })
 })

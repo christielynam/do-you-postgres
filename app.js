@@ -7,10 +7,8 @@ const environment = process.env.NODE_ENV || 'development';
 const configuration = require('./knexfile')[environment];
 const database = require('knex')(configuration);
 
-
 const index = require('./routes/index');
 const users = require('./routes/users');
-
 const app = express();
 
 app.use(cors());
@@ -37,14 +35,6 @@ app.set("port", process.env.PORT || 3000);
 http.createServer(app).listen(app.get("port"), function() {
   console.log("Express server listening on port " + app.get("port"));
 });
-
-// app.locals.users = require('./users');
-
-app.post('/api/v1/users', (request, response) => {
-  app.locals.users.push(request.body); // No validation here...
-  response.status(200).json(app.locals.users[app.locals.users.length - 1]);
-});
-
 
 // login of user
 app.post('/api/v1/users', (request, response) => {
