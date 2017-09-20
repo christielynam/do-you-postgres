@@ -6,10 +6,28 @@ const http = require('http');
 const environment = process.env.NODE_ENV || 'development';
 const configuration = require('./knexfile')[environment];
 const database = require('knex')(configuration);
+const passport = require('passport')
+  , FacebookStrategy = require('passport-facebook').Strategy
+
+const FACEBOOK_APP_ID = '1667718293269177';
+const FACEBOOK_APP_SECRET = 'f2cd1c9f34f5f3a109cb682ff2579351';
+
+const fbOptions = {
+  clientID: FACEBOOK_APP_ID,
+  clientSecret: FACEBOOK_APP_SECRET,
+  callbackURL: 'http://localhost3000/auth/facebook/callback',
+  profilefields: ['emails']
+ }
+
+ const fbCallback = (accessToken, refreshToken, profile, cb) => {
+   console.log(accessToken, refreshToken, profile);
+ }
 
 const index = require('./routes/index');
 const users = require('./routes/users');
 const app = express();
+
+
 
 app.use(cors());
 app.use(function(req, res, next) {
@@ -23,16 +41,28 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.static(path.join(__dirname, 'public')));
 
+passport.use(new FacebookStrategy(fbOptions, fbCallback))
+
 app.use('/users', users);
 app.set("port", process.env.PORT || 3000);
-app.get("/", function(req, res) {
-  res.send("war eagle!");
-});
+// app.get("/", function(req, res) {
+//   res.send("war eagle!");
+// });
 
 app.set("port", process.env.PORT || 3000);
 http.createServer(app).listen(app.get("port"), function() {
   console.log("Express server listening on port " + app.get("port"));
 });
+
+app.route('/')
+  .get(passport.authenticate('facebook', { scope: ['email']}))
+
+app.route('/auth/facebook/callback')
+  .get(passport.authenticate('facebook', (err, user, info) => {
+    console.log(err, user, info);
+    // DB save
+  }))
+
 
 // ENDPOINTS
 // login user to database, retrieve user
