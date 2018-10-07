@@ -1,6 +1,6 @@
 # DO YOU (backend)
 
-The backend server was built with Express, Knex, and Postgres
+The backend server was built with Express, Knex, and Postgres.
 You can find the client-side application [here](https://github.com/christielynam/do-you).
 
 ## Installation/Setup
